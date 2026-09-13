@@ -1,6 +1,7 @@
 const assert=require('node:assert/strict');
 const S=require('./demo/engine.js'),M=require('./demo/city-map.js');
 const locations=seed=>S.create(seed,'B').people.filter(p=>p.pickup).map(p=>p.pickup);
+assert.equal(locations(42).length,50);
 assert.deepEqual(locations(42),locations(42));assert.notDeepEqual(locations(42),locations(43));
 assert.deepEqual(S.create(42,'A').people,S.create(42,'B').people);
 let boarded=0;

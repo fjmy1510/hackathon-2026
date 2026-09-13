@@ -129,7 +129,7 @@
     (state.people||[]).filter(function(p){return p.status==='waiting'&&p.pickup;}).forEach(function(p,i){
       var at=p.pickup,q=position({edge:{from:at.from,to:at.to,elapsed:at.offset,duration:at.duration}});
       var x=Math.max(5,Math.min(658,q.x+12)),y=Math.max(8,Math.min(467,q.y-27));
-      while(roadsideLabels.some(function(r){return Math.abs(r.x-x)<100&&Math.abs(r.y-y)<23;})){y=y<440?y+24:8;}
+      for(var attempt=0;attempt<40&&roadsideLabels.some(function(r){return Math.abs(r.x-x)<100&&Math.abs(r.y-y)<23;});attempt++){y+=24;if(y>467){y=8;x=Math.max(5,x-102);}}
       roadsideLabels.push({x:x,y:y});
       out+='<g class="map-waiter roadside-waiter" data-person="'+esc(p.id)+'"><path d="M'+q.x+' '+q.y+'L'+x+' '+(y+10)+'" stroke="#c78f3f" stroke-width="1.5"/><circle cx="'+q.x+'" cy="'+q.y+'" r="4" fill="#e3a348" stroke="white"/><g transform="translate('+x+' '+y+')"><rect width="94" height="20" rx="6" fill="#fff3df" stroke="#e1bc85"/><circle cx="10" cy="5" r="3" fill="#bd8639"/><path d="M6 16v-5q4-5 8 0v5" fill="#bd8639"/><text x="19" y="14" font-size="10" fill="#966927">'+esc(p.name)+' 待機</text></g></g>';
     });

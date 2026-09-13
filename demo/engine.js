@@ -62,7 +62,7 @@
     ].map(function (x) { return { id: x[0], name: x[1], kind: 'registered', origin: x[2], destination: x[3][0], node: x[2], status: 'pending', readyAt: x[5], deadline: x[6], visits: x[3], stays: x[4], visitIndex: 0, returning: false, planBus: null, locked: false, completedVisits: [], completedStays: [] }; });
   }
   function makeWalkins(random, spatialRandom) {
-    var origins = [0, 1, 2, 3, 4];
+    var origins = Array.from({length: 50}, function(_, i) { return i; });
     return origins.map(function (_, i) {
       var road = edges[Math.floor(spatialRandom() * edges.length)];
       var offset = 1 + Math.floor(spatialRandom() * (road[2] - 1));

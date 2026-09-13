@@ -1,6 +1,6 @@
 # まちの余白 — 予定＋潜在需要バスシミュレーター
 
-共有サイト: https://kondakaz.github.io/machi-no-yohaku/
+共有サイト: https://fjmy1510.github.io/hackathon-2026/
 
 依存パッケージ不要の簡易HTMLサンプル。UIはHTML/CSS/JavaScriptとSVG、計算はブラウザ内。React/TypeScriptへの移行は本サンプルの範囲外。
 
@@ -47,7 +47,7 @@ AI支援: 計算エンジン、画面、テスト、説明文の実装。人間�
 
 ## GitHub Pagesの更新
 
-`demo` のソースを編集し、`node package-demo.cjs` で単一HTMLと `docs/index.html` を再生成する。テスト後、変更をmainへpushし、`demo`を切り出したコミットをgh-pagesへpushすると、GitHub Pagesが公開する。アプリ内の「この実験の見方・操作ガイド」に1分の体験手順を掲載。
+`demo` のソースを編集し、`node package-demo.cjs` で単一HTMLと `docs/index.html` を再生成する。テスト後、生成ファイルを含む変更をmainへpushすると、GitHub Pagesが `docs` から公開する。アプリ内の「この実験の見方・操作ガイド」に1分の体験手順を掲載。
 
 ## 地図の予約待機者と時間スライダー
 
@@ -59,9 +59,9 @@ AI支援: 計算エンジン、画面、テスト、説明文の実装。人間�
 
 ## GitHub Pages配信元の変更
 
-Pagesは公開用ブランチ `gh-pages` のルート `/` を配信する。`demo` 内のファイルをそのまま公開用ブランチへ切り出すため、公開ブランチ直下に `index.html`、`app.js`、`engine.js`、`timeline.js`、`style.css` が置かれる。
+このリポジトリのPagesは `main` ブランチの `/docs` を配信する。`docs/index.html` はCSSとJavaScriptを内蔵した単一HTMLで、`docs/.nojekyll` により静的ファイルとして配信する。
 
-更新時はソースと単一HTMLを再生成・テストしてmainへpush後、`git subtree split --prefix demo` の出力コミットを `gh-pages` ブランチへpushする。以前のmain:/docs設定は使用しない。
+更新時は `node package-demo.cjs` で再生成・テストしてmainへpushする。GitHubの Settings → Pages は「Deploy from a branch」、ブランチ `main`、フォルダー `/docs` に設定する。
 
 
 ## 街並みと予約によるルート変更の実演

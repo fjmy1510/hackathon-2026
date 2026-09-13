@@ -112,18 +112,26 @@
     for(var i=0;i<12;i++){var tx=327+(i%4)*27,ty=373+Math.floor(i/4)*32;out+='<circle cx="'+tx+'" cy="'+ty+'" r="5" fill="#a3bd8d"/>';}
     out+='<g><rect x="518" y="44" width="76" height="30" rx="3" fill="#e1e5e4" stroke="#b4c0be"/><path d="M554 49v18m-9-9h18" stroke="#c17e79" stroke-width="4"/><rect x="585" y="293" width="39" height="42" rx="2" fill="#dfd0b5" stroke="#b9ac96"/><path d="M591 300h27m-27 8h27m-27 8h27" stroke="#f7ead2" stroke-width="4"/></g>';
     out+='<path d="M20 244H465" stroke="#bbc1ba" stroke-width="8"/><path d="M20 244H465" stroke="#f5f4ed" stroke-width="5" stroke-dasharray="2 4"/><rect x="326" y="234" width="87" height="20" rx="3" fill="#abbab7"/><text x="369" y="247" text-anchor="middle" font-size="9" fill="white">まちの中央駅</text>';
-    nodeList.forEach(function(n){var f=host.BusSim?host.BusSim.forecast(n.id,state.time||0):0;var r=18+Math.sqrt(Math.max(0,f))*14;out+='<circle cx="'+n.x+'" cy="'+n.y+'" r="'+r+'" fill="#86b96d" fill-opacity=".10" stroke="#80a66e" stroke-opacity=".5" stroke-dasharray="3 5"/>';});
+    Object.keys(roads).forEach(function(k){var ids=k.split('|'),f=host.BusSim?(host.BusSim.forecast(ids[0],state.time||0)+host.BusSim.forecast(ids[1],state.time||0))/2:0;[.3,.7].forEach(function(t){var q=onLine(roads[k],t),r=12+Math.sqrt(f)*12;out+='<circle cx="'+q.x+'" cy="'+q.y+'" r="'+r+'" fill="#86b96d" fill-opacity=".10" stroke="#80a66e" stroke-opacity=".4" stroke-dasharray="3 5"/>';});});
     out+='<g transform="translate(16 16)"><rect width="143" height="23" rx="5" fill="white" fill-opacity=".94"/><text x="10" y="15" font-size="9" fill="#65716a">京都風の架空マップ · 北 ↑</text></g>';
     // Reference lines draw at exact road positions, then the bus covers the current point.
     [{ list: options.past, stroke: '#9ab2a8', width: 2, dash: '' }, { list: options.before, stroke: '#8f9695', width: 3, dash: '7 6' }, { list: options.future, stroke: null, width: 4, dash: '9 6' }].forEach(function (layer) { (state.buses || []).forEach(function (b, i) { var pts = trace(layer.list, b, i); if (pts.length > 1) out += '<polyline points="' + pts.map(function (q) { return q.x.toFixed(1) + ',' + q.y.toFixed(1); }).join(' ') + '" fill="none" stroke="' + (layer.stroke || colors[i % colors.length]) + '" stroke-width="' + layer.width + '" stroke-opacity=".72" stroke-dasharray="' + layer.dash + '" stroke-linecap="round"/>'; }); });
     nodeList.forEach(function (n) { out += '<g transform="translate(' + n.x + ' ' + n.y + ')"><circle r="13" fill="#fff" stroke="#638b71" stroke-width="3"/><circle r="4" fill="#497b61"/><text y="-21" text-anchor="middle" font-size="12" font-weight="700" fill="#40584a" stroke="#fff" stroke-width="3" paint-order="stroke">' + esc(n.name) + '</text></g>'; });
     nodeList.forEach(function (n) {
-      var waiting=(state.people||[]).filter(function(p){return p.status==='waiting'&&p.node===n.id;});
+      var waiting=(state.people||[]).filter(function(p){return p.status==='waiting'&&!p.pickup&&p.node===n.id;});
       var x=n.x>500?n.x-112:n.x+20,y=Math.max(20,Math.min(n.y+16,482-waiting.length*21));
       waiting.forEach(function(p,i){
         var reserved=p.kind==='registered',color=reserved?'#5279ad':'#bd8639';
         out+='<g class="map-waiter" data-person="'+esc(p.id)+'" transform="translate('+x+' '+(y+i*21)+')"><rect width="94" height="19" rx="6" fill="'+(reserved?'#edf3ff':'#fff3df')+'" stroke="'+(reserved?'#a5bddb':'#e1bc85')+'"/><circle cx="10" cy="5" r="3" fill="'+color+'"/><path d="M6 15v-4q4-5 8 0v4" fill="'+color+'"/><text x="19" y="13" font-size="11" fill="'+color+'">'+esc(reserved?p.name:'未予約で待機')+'</text></g>';
       });
+    });
+    var roadsideLabels=[];
+    (state.people||[]).filter(function(p){return p.status==='waiting'&&p.pickup;}).forEach(function(p,i){
+      var at=p.pickup,q=position({edge:{from:at.from,to:at.to,elapsed:at.offset,duration:at.duration}});
+      var x=Math.max(5,Math.min(658,q.x+12)),y=Math.max(8,Math.min(467,q.y-27));
+      while(roadsideLabels.some(function(r){return Math.abs(r.x-x)<100&&Math.abs(r.y-y)<23;})){y=y<440?y+24:8;}
+      roadsideLabels.push({x:x,y:y});
+      out+='<g class="map-waiter roadside-waiter" data-person="'+esc(p.id)+'"><path d="M'+q.x+' '+q.y+'L'+x+' '+(y+10)+'" stroke="#c78f3f" stroke-width="1.5"/><circle cx="'+q.x+'" cy="'+q.y+'" r="4" fill="#e3a348" stroke="white"/><g transform="translate('+x+' '+y+')"><rect width="94" height="20" rx="6" fill="#fff3df" stroke="#e1bc85"/><circle cx="10" cy="5" r="3" fill="#bd8639"/><path d="M6 16v-5q4-5 8 0v5" fill="#bd8639"/><text x="19" y="14" font-size="10" fill="#966927">'+esc(p.name)+' 待機</text></g></g>';
     });
     (state.buses || []).forEach(function (b, i) { var pos = position(b), old = previous[b.id], animate = '', draw = pos; var dt = old && Number(state.time) - Number(old.time); if (old && dt >= 1 && dt <= 3 && Math.hypot(pos.x - old.pos.x, pos.y - old.pos.y) < 180) { animate = motionOnRoad(old.bus, b, old.pos, pos); if (animate) draw = old.pos; } out += busGlyph(b, i, draw, animate); previous[b.id] = { time: state.time, pos: pos, bus: { edge: b.edge && { from: b.edge.from, to: b.edge.to, elapsed: b.edge.elapsed, duration: b.edge.duration } } }; });
     (state.people || []).filter(function (p) { return p.status === 'onboard' && Number(state.time) - Number(p.boardedAt) <= 2; }).forEach(function (p, i) { var b = (state.buses || []).filter(function (q) { return (q.onboard || []).indexOf(p.id) >= 0; })[0]; if (b) { var q = position(b); out += '<g transform="translate(' + (q.x + 18) + ' ' + (q.y - 24 - i * 16) + ')"><rect width="54" height="14" rx="7" fill="#fff" stroke="#8bb895"/><text x="27" y="10" text-anchor="middle" font-size="8" fill="#3e7655">乗車しました</text></g>'; } });

@@ -61,18 +61,23 @@
       ['r5', '伊藤さん', 'homeA', ['mall', 'station'], [20, 15], 25, 175]
     ].map(function (x) { return { id: x[0], name: x[1], kind: 'registered', origin: x[2], destination: x[3][0], node: x[2], status: 'pending', readyAt: x[5], deadline: x[6], visits: x[3], stays: x[4], visitIndex: 0, returning: false, planBus: null, locked: false, completedVisits: [], completedStays: [] }; });
   }
-  function makeWalkins(random) {
-    var origins = ['homeA', 'homeB', 'hospital', 'mall', 'park'];
-    return origins.map(function (origin, i) {
+  function makeWalkins(random, spatialRandom) {
+    var origins = [0, 1, 2, 3, 4];
+    return origins.map(function (_, i) {
+      var road = edges[Math.floor(spatialRandom() * edges.length)];
+      var offset = 1 + Math.floor(spatialRandom() * (road[2] - 1));
+      var origin = offset <= road[2] / 2 ? road[0] : road[1];
+      var pickup = { from: road[0], to: road[1], offset: offset, duration: road[2] };
+
       var choices = nodes.map(function (n) { return n.id; }).filter(function (id) { return id !== origin; });
-      return { id: 'w' + (i + 1), name: '未予約' + (i + 1), kind: 'walkin', origin: origin, destination: choices[Math.floor(random() * choices.length)], node: origin, status: 'pending', readyAt: 15 + Math.floor(random() * 125), deadline: 0, visits: [], stays: [], visitIndex: 0, planBus: null, locked: false, completedVisits: [], completedStays: [] };
+      return { id: 'w' + (i + 1), name: '未予約' + (i + 1), kind: 'walkin', pickup: pickup, origin: origin, destination: choices[Math.floor(random() * choices.length)], node: origin, status: 'pending', readyAt: 15 + Math.floor(random() * 125), deadline: 0, visits: [], stays: [], visitIndex: 0, planBus: null, locked: false, completedVisits: [], completedStays: [] };
     });
   }
   function create(seed, mode) {
     var random = rng(seed);
     var s = { time: 0, mode: mode === 'A' ? 'A' : 'B', seed: seed == null ? 1 : seed,
       buses: [{ id: 'bus1', node: 'station', edge: null, onboard: [], route: [], distance: 0 }, { id: 'bus2', node: 'station', edge: null, onboard: [], route: [], distance: 0 }],
-      people: makeRegistered().concat(makeWalkins(random)), logs: [], boardingChecks: [], capacity: 4, finished: false };
+      people: makeRegistered().concat(makeWalkins(random, rng(String(seed == null ? 1 : seed) + ':street-locations'))), logs: [], boardingChecks: [], capacity: 4, finished: false };
     log(s, '条件生成: mode ' + s.mode + ', seed ' + s.seed);
     return s;
   }
@@ -88,7 +93,7 @@
     return forecastIn(null, nodeId, time);
   }
   function personById(s, id) { return s.people.filter(function (p) { return p.id === id; })[0]; }
-  function waitingAt(s, node, registeredOnly) { return s.people.filter(function (p) { return p.status === 'waiting' && p.node === node && (!registeredOnly || p.kind === 'registered'); }); }
+  function waitingAt(s, node, registeredOnly) { return s.people.filter(function (p) { return p.status === 'waiting' && p.node === node && !p.pickup && (!registeredOnly || p.kind === 'registered'); }); }
   function pickBusFor(s, p) {
     // Greedy insertion score: current immutable edge/onboard work is retained;
     // candidate pickup is appended after it, and the earliest feasible bus wins.
@@ -132,7 +137,7 @@
         p.status = 'waiting';
         // For a walk-in this is a boarding cutoff, not an arrival deadline.
         if (p.kind === 'walkin') { p.waitUntil = s.time + 30; p.deadline = p.waitUntil; }
-        log(s, p.name + ' が ' + byId[p.node].name + ' で待機開始');
+        log(s, p.name + ' が ' + (p.pickup ? byId[p.pickup.from].name + '〜' + byId[p.pickup.to].name + 'の道路沿い' : byId[p.node].name) + ' で待機開始');
       }
       if (p.status === 'staying' && s.time >= p.readyAt) {
         p.completedStays.push({ node: p.node, minutes: s.time - p.stayStartedAt });
@@ -201,6 +206,26 @@
       if (b.onboard.length < s.capacity && (p.kind === 'walkin' || p.planBus === b.id || !p.locked) && canBoard(s, b, p)) { b.onboard.push(p.id); p.status = 'onboard'; p.boardedAt = s.time; p.planBus = b.id; log(s, p.name + ' が ' + b.id + ' に乗車'); }
     });
   }
+  function boardRoadside(s, b) {
+    var e = b.edge;
+    if (!e) return;
+    // Discover people only at the exact road position the bus is passing.
+    s.people.filter(function(p) {
+      if (p.kind !== 'walkin' || !p.pickup || p.status !== 'waiting') return false;
+      var at=p.pickup;
+      return (e.from===at.from && e.to===at.to && e.elapsed===at.offset) ||
+        (e.from===at.to && e.to===at.from && e.elapsed===e.duration-at.offset);
+    }).forEach(function(p) {
+      if (canBoard(s,b,p)) {
+        b.onboard.push(p.id); p.status='onboard'; p.boardedAt=s.time; p.planBus=b.id;
+        p.boardedRoad=clone(e);
+        log(s,p.name+' が道路沿いで '+b.id+' に乗車');
+      }
+    });
+    // Boarding has zero dwell time in this minute-based MVP. The current edge
+    // remains immutable; dropoffs are planned from its endpoint, including the
+    // remaining road travel in every acceptance check.
+  }
   function startEdge(s, b, to) {
     if (!to || to === b.node) return;
     var route = path(b.node, to); if (route.nodes.length < 2) return;
@@ -243,7 +268,7 @@
     activatePeople(s);
     scheduleReservations(s);
     s.buses.forEach(function (b) {
-      if (b.edge) { b.edge.elapsed++; b.distance += 0.45; if (b.edge.elapsed >= b.edge.duration) { b.node = b.edge.to; if (b.route[0] === b.node) b.route.shift(); b.edge = null; log(s, b.id + ' が ' + byId[b.node].name + ' に到着'); } }
+      if (b.edge) { b.edge.elapsed++; b.distance += 0.45; boardRoadside(s, b); if (b.edge.elapsed >= b.edge.duration) { b.node = b.edge.to; if (b.route[0] === b.node) b.route.shift(); b.edge = null; log(s, b.id + ' が ' + byId[b.node].name + ' に到着'); } }
       if (!b.edge) chooseMove(s, b);
     });
     if (s.time >= 180) { s.finished = true; log(s, '12時: シミュレーション終了'); }

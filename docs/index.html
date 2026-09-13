@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>まちの余白 | 需要バスシミュレーター</title><style>:root{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;color:#233d3a;background:#f4f6f2;font-synthesis:none}*{box-sizing:border-box}body{margin:0}header{height:74px;background:#fff;border-bottom:1px solid #dce5dd;display:flex;align-items:center;justify-content:space-between;padding:0 5%}.brand{text-decoration:none;color:#235f50;font-size:22px;font-weight:800}.brand small{font-size:10px;letter-spacing:2px;margin-left:18px;color:#788b84}.tag{font-size:11px;background:#eef3ed;padding:6px 10px;border-radius:5px;color:#52695e}main{max-width:1440px;margin:auto;padding:38px 5% 20px}.intro{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}.eyebrow{font-size:12px;font-weight:700;letter-spacing:2px;color:#36856c}h1{font-size:clamp(26px,3vw,39px);line-height:1.5;letter-spacing:-1px;margin:12px 0}p{font-size:13px;line-height:1.9;color:#64776f}.conditions{padding:20px 25px;border-left:1px solid #d4ded5}.conditions b{font-size:33px;white-space:nowrap}.conditions b span{font-size:12px;margin:0 17px 0 4px;color:#6f8177}.conditions small{display:block;font-size:11px;margin-top:10px;color:#6f8177}.toolbar{display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap}button,select,input{font:inherit}button{border:1px solid #d5dfd7;background:white;color:#365447;border-radius:8px;padding:11px 15px;font-size:12px;font-weight:650;cursor:pointer;transition:.15s}button:hover{background:#e3efe5;border-color:#86af99}button:disabled{cursor:default;opacity:.42}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #ebba53;outline-offset:2px}.modes{display:flex;background:#e6ece5;border-radius:10px;padding:4px}.modes button{border:0;background:transparent}.modes .selected{background:#fff;box-shadow:0 2px 5px #29443115;color:#176a50}.toolbar label{font-size:11px;margin-left:auto;color:#6d7f74}input{width:80px;border:1px solid #d5dfd7;border-radius:6px;padding:9px;margin-left:7px;background:white;color:#233d3a}.dark{background:#263f37;color:white}.primary{background:#287959;color:white;border-color:#287959}.layout{display:grid;grid-template-columns:minmax(0,2.4fr) minmax(255px,1fr);gap:20px}.map-panel,.card{border:1px solid #dce4db;background:#fff;border-radius:13px;overflow:hidden}.card{padding:20px;margin-bottom:20px}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;flex-wrap:wrap}.map-panel>.panel-head{padding:20px;border-bottom:1px solid #edf0e9}.muted{font-size:10px;color:#849187;margin-left:10px}.live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#439775;margin-right:8px}.assumption{font-size:10px;color:#887133;background:#f7f1df;padding:5px 9px;border-radius:4px}#map{width:100%;display:block;background:#f7f9f3}svg text{font-family:inherit}.legend{display:flex;justify-content:center;gap:20px;padding:14px 8px;font-size:10px;color:#728178;border-bottom:1px solid #edf0e9}.legend span{display:flex;align-items:center;gap:5px}i{display:inline-block}.halo{width:15px;height:15px;background:#e2edce;border:1px dashed #9cba70;border-radius:50%}.wait-dot{height:8px;width:8px;border-radius:50%;background:#df944b}.bus-dot{height:8px;width:14px;background:#287959;border-radius:3px}.second{background:#557daf}.playback{padding:15px;display:flex;gap:12px;align-items:center}.playback strong{font-size:24px;font-variant-numeric:tabular-nums}.timeline{height:5px;background:#e8eee6;flex:1;border-radius:10px;overflow:hidden}#progress{height:100%;background:#499977;width:0}select{font-size:11px;padding:7px;border:1px solid #dce4db;border-radius:5px;background:white}.bus-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 15px 15px}.bus-card{background:#f5f7f2;border-radius:7px;padding:12px;font-size:11px;line-height:1.9}.bus-card b{margin-right:8px}.stat{padding:18px 0;border-bottom:1px solid #edf0e9}.stat:last-child{border-bottom:0}.stat-label{font-size:11px;color:#6d7f74}.stat-value{display:flex;align-items:baseline;gap:8px;margin:7px 0}.stat-value b{font-size:31px;line-height:1.1}.stat-value span{font-size:12px;color:#8b988e}.bar{height:5px;background:#e9eee7;border-radius:9px;overflow:hidden}.bar>div{height:100%;background:#4c9575}.note{font-size:10px;margin-bottom:0}.logs{margin-top:12px;max-height:174px;overflow:auto;font-size:11px;line-height:1.8;color:#78867c}.logs div{border-bottom:1px solid #f0f2ed;padding:6px 0}.people{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:20px}.person{border:1px solid #e3e9df;border-radius:8px;padding:14px;font-size:11px}.person h3{font-size:13px;margin:0 0 10px}.person p{font-size:11px;line-height:1.8;min-height:38px;margin:9px 0}.person .status{font-size:10px;border-radius:4px;background:#eef3e8;padding:4px 6px;display:inline-block}.person button{width:100%;margin-top:10px;padding:8px;font-size:11px}.notice{font-size:11px;color:#6a806c;margin:15px 0 0}.comparison{margin-top:20px}.comparison table{width:100%;border-collapse:collapse;margin-top:15px;font-size:12px}.comparison td,.comparison th{padding:12px;text-align:left;border-bottom:1px solid #e7ede3}.comparison th{color:#6b7d71;font-weight:500}.comparison td:last-child{background:#f2f7ee}details{font-size:12px;margin-top:20px}summary{cursor:pointer;font-weight:600}footer{display:flex;justify-content:space-between;font-size:10px;color:#92a092;margin-top:25px;gap:20px}footer span{font-size:9px;letter-spacing:1px}.mobile{display:none}@media(max-width:1050px){main{padding:25px 3%}.layout{grid-template-columns:1fr}aside{display:grid;grid-template-columns:1fr 1fr;gap:20px}.conditions{display:none}.people{grid-template-columns:repeat(3,1fr)}.toolbar label{margin-left:0}}@media(max-width:600px){header{height:60px}.brand{font-size:18px}.brand small{display:none}main{padding:24px 14px}.mobile{display:block}.intro p{font-size:11px}.toolbar{gap:8px}.toolbar>.dark{width:100%}.modes{width:100%}.modes button{flex:1}.people{grid-template-columns:1fr 1fr}aside{display:block}.legend{gap:8px;font-size:8px}.playback{gap:7px;padding:12px 8px}.playback strong{font-size:20px}.playback button{padding:9px}.timeline{min-width:20px}footer{display:block}footer span{display:block;margin-top:10px}.panel-head .muted{display:none}.card{padding:15px}}
+.walkins{margin-top:14px}.walkin{display:grid;grid-template-columns:90px 1fr 140px;gap:12px;border-top:1px solid #edf0e9;padding:12px 0;font-size:11px}.walkin .status{text-align:right;color:#7e8d78}@media(max-width:600px){.walkin{grid-template-columns:65px 1fr 95px;font-size:10px;gap:6px}}
+.guide{padding-left:22px;color:#64776f;line-height:1.9}.guide li{margin:12px 0}.guide b{color:#365447}details h3{font-size:13px;margin:22px 0 10px}
+.reserved-dot{width:8px;height:12px;background:#7698c5;border-radius:5px 5px 2px 2px}.legend{flex-wrap:wrap}.timeline{height:auto;overflow:visible;background:transparent;min-width:90px;flex:1}.timeline input[type=range]{display:block;width:100%;height:24px;padding:0;margin:0;border:0;border-radius:0;background:transparent;accent-color:#287959;cursor:ew-resize}.time-bounds{display:flex;justify-content:space-between;color:#8a998c;font-size:9px}.playback{flex-wrap:wrap}@media(max-width:600px){.playback .timeline{order:5;flex-basis:100%;margin-top:4px}.playback>label{margin-left:auto}.timeline input[type=range]{height:32px}}
+.route-legend{display:flex;flex-wrap:wrap;gap:14px;align-items:center;padding:4px 18px 12px;font-size:10px;color:#718277}.route-legend span:before{content:'';display:inline-block;width:26px;margin-right:6px;vertical-align:middle;border-top:3px solid #91baa6}.route-legend .future-line:before{border-top:3px dashed #287959}.route-legend .before-line:before{border-top:3px dashed #8d98a6}.route-legend small{margin-left:auto;font-size:10px}.plan-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 15px}.plan-card{padding:10px 12px;border-radius:7px;background:#edf4ef;line-height:1.8;font-size:10px}.plan-card b,.plan-card span{display:block}.route-note{font-size:10px;margin:10px 18px 14px}.reservation-card{margin-top:20px;background:#fbfdf8;border-color:#b9cfb8}#reservationForm{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;margin-top:16px}#reservationForm label{font-size:11px;color:#6d7f74}#reservationForm select{display:block;min-width:140px;padding:10px;margin-top:7px;font-size:13px}.reserve-arrow{align-self:center;color:#8e9c8d}.reservation-terms{font-size:10px;color:#849180;align-self:center}#reservationSubmit{margin-left:auto}.people{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}@media(max-width:600px){#reservationForm{gap:10px}#reservationForm label{flex:1}#reservationForm select{min-width:0;width:100%}.reservation-terms{width:100%}#reservationSubmit{width:100%}.plan-cards{grid-template-columns:1fr}.route-legend small{margin-left:0;width:100%}}
+aside .reservation-card{margin-top:0}aside .reservation-card .panel-head{display:block}aside #demoSetup{margin-top:12px;width:100%}aside #reservationForm{gap:9px}aside #reservationForm label{flex:1;min-width:75px}aside #reservationForm select{width:100%;min-width:0;font-size:12px}aside .reservation-terms{width:100%;font-size:9px}aside #reservationSubmit{width:100%}aside .reservation-card .muted{display:block;margin:7px 0 0}@media(min-width:601px) and (max-width:1050px){aside .reservation-card{grid-column:1 / -1}}
+/* Passenger app beside an urban street map. */
+.layout{grid-template-columns:minmax(0,1fr) 330px;align-items:start}.ride-shell{background:none;border:0;margin:0 0 24px;padding:0}.ride-caption{display:flex;justify-content:space-between;align-items:center;font-size:12px;margin:0 5px 10px}.ride-caption span{font-size:10px;color:#88938c}.ride-phone{background:#fff;border:6px solid #25322e;border-radius:35px;padding:12px 20px 9px;box-shadow:0 12px 25px #263f3715;color:#24372f;overflow:hidden}.phone-status{display:flex;justify-content:space-between;align-items:center;font-size:10px;font-weight:700;height:15px}.phone-island{height:15px;width:75px;background:#25322e;border-radius:20px}.ride-app-head{display:flex;justify-content:space-between;align-items:center;margin-top:23px}.ride-app-head>b{font-size:24px;letter-spacing:-1px}.ride-app-head>b span{font-weight:400;font-size:16px;color:#829287;letter-spacing:0}.ride-avatar{background:#edf2ed;width:29px;height:29px;border-radius:50%;display:grid;place-items:center;font-size:12px}.ride-heading{margin:22px 0 18px}.ride-kicker{font-size:9px;letter-spacing:2px;color:#60816e}.ride-heading h2{font-size:28px;line-height:1.4;letter-spacing:-1px;margin:8px 0}.ride-heading p{font-size:10px;margin:0;color:#819085}aside #reservationForm{display:block;margin:0}.ride-location{display:flex;gap:13px;align-items:center;background:#f3f5f1;padding:10px 12px;margin-bottom:3px;border-radius:5px}.ride-location i{width:10px;height:10px;flex-shrink:0}.pickup-pin{border:3px solid #3d8b65;border-radius:50%}.destination-pin{background:#24372f;border:2px solid white;outline:1px solid #24372f}.ride-location label{display:block;color:#879389!important;font-size:9px!important;width:100%}aside #reservationForm select{border:0;padding:3px 0;margin:0;background:transparent;font-size:14px;font-weight:650;color:#24372f;cursor:pointer}.ride-vehicle{display:flex;align-items:center;gap:12px;border:1px solid #ccdcd0;background:#f6faf5;border-radius:10px;padding:13px 10px;margin:17px 0 12px}.ride-vehicle b{font-size:12px}.ride-vehicle small{display:block;font-size:9px;color:#819085;margin-top:4px}.ride-bus-icon{font-size:35px;line-height:18px;color:#48886a;display:block}.ride-bus-icon small{font-size:9px;letter-spacing:2px;color:#294235;margin:0}.ride-chip{font-size:9px;background:#e1eedf;padding:4px 7px;border-radius:5px;margin-left:auto}aside .reservation-terms{font-size:9px;line-height:1.8;color:#8b978d;margin-bottom:13px}aside #reservationSubmit{border:0;background:#233a30;color:#fff;border-radius:10px;padding:15px 12px;font-size:13px;text-align:left}#reservationSubmit span{float:right;font-size:18px;line-height:17px}#reservationSubmit:hover{background:#34624b}.ride-phone .notice{font-size:9px;line-height:1.75;color:#748477;margin:12px 0}.phone-home{width:95px;height:4px;border-radius:5px;background:#24372f;margin:15px auto 0}.ride-progress{border-top:1px solid #e3e9df;margin-top:16px;padding-top:13px}.ride-progress b{display:block;font-size:15px}.ride-progress p{font-size:10px;line-height:1.8;margin:7px 0}.ride-progress small{font-size:9px;color:#829083}.ride-progress .ride-eta{font-size:24px;color:#287959;margin-top:7px;display:block}.ride-phone #rideFollow{width:100%;background:#e8f2e5;border:0;padding:11px;font-size:10px;margin-top:8px}aside #demoSetup{margin-top:14px;font-size:11px;background:#fff;width:100%}.ride-help{font-size:10px;line-height:1.8;padding:0 5px;margin:8px 0;color:#7a897e}.ride-shell [hidden]{display:none!important}.map-panel{min-width:0}#map{background:#ecebe5}@media(max-width:1050px) and (min-width:761px){.layout{grid-template-columns:minmax(0,1fr) 300px;gap:14px}aside{display:block}.ride-phone{padding-left:15px;padding-right:15px}.legend{gap:9px}.playback .timeline{flex-basis:100%;order:5}.plan-cards{grid-template-columns:1fr}}@media(max-width:760px){.layout{grid-template-columns:1fr}aside{display:block}.ride-shell{max-width:350px;margin:20px auto}.ride-phone{padding-left:22px;padding-right:22px}}
+.ride-time{margin-top:9px}.ride-location .pickup-clock{width:16px;height:auto;font-style:normal;font-size:20px;color:#578069;line-height:1}#reserveTime{display:block;width:100%;box-sizing:border-box;margin:0;padding:4px 0;border:0;background:transparent;color:#24372f;font-size:16px;font-weight:650;min-height:30px}#reserveTime:invalid{color:#a55742}
+</style></head>
+<body><header><a class="brand" href="./">◈ まちの余白 <small>MOBILITY LAB / 2036</small></a><span class="tag">実験用プロトタイプ</span></header>
+<main><div class="intro"><div><div class="eyebrow">10年後、予約していない移動にも。</div><h1>同じ2台で、<br class="mobile">どこまで迎えにいける？</h1><p>予定に合わせる運行と、まちの需要を先読みする運行。<br>声になっていない移動を、シミュレーションで比べよう。</p></div><div class="conditions"><b>6<span>地点</span> 2<span>台</span> <strong id="population">10</strong><span>人</span></b><small>架空の地域 / 各車4席 / 9:00–12:00</small></div></div>
+<section class="toolbar"><div class="modes" role="group" aria-label="運行方式"><button id="modeA">A 予定のみ</button><button id="modeB" class="selected">B 予定＋需要予測</button></div><label>乱数シード <input id="seed" type="number" value="42" min="1" max="999999"></label><button id="reset">↻ 条件を再生成</button><button id="compare" class="dark">A / B を最後まで比較 ↗</button></section>
+<div class="layout"><section class="map-panel"><div class="panel-head"><div><span class="live-dot"></span><b id="modeTitle">B 予定＋需要予測</b><span class="muted">運行マップ</span></div><span class="assumption">需要予測は仮定値</span></div><svg id="map" viewBox="0 0 760 500" role="img" aria-label="6地点の道路、車両と待機者"></svg><div class="legend"><span><i class="halo"></i>予測需要（今後30分）</span><span><i class="wait-dot"></i>未予約待機者</span><span><i class="reserved-dot"></i>予約待機者（名前）</span><span><i class="bus-dot"></i>バス1 / <i class="bus-dot second"></i>バス2</span></div><div class="playback"><button id="play" class="primary">▶ 再生</button><button id="step">＋10分</button><strong id="clock">09:00</strong><div class="timeline"><input id="timeSlider" type="range" min="0" max="180" step="1" value="0" aria-label="表示時刻（9時から12時）" aria-valuetext="09:00"><div class="time-bounds"><span>09:00</span><span>12:00</span></div></div><label><select id="speed" aria-label="再生速度"><option value="1">標準</option><option value="3" selected>3倍速</option><option value="8">8倍速</option></select></label></div><div class="route-legend"><span class="past-line">過去15分の実績</span><span class="future-line">今後15分の予定</span><span id="beforeLegend" class="before-line" hidden>予約変更前</span><small id="routeWindow"></small></div><div id="planCards" class="plan-cards"></div><p class="route-note">予定ルートは、現在の予約と乗車状況に基づきます。未確認の未予約者は含まず、実際の乗車や追加予約で変わります。</p><div id="busCards" class="bus-cards"></div></section>
+<aside><section class="reservation-card ride-shell"><div class="ride-caption"><b>乗客のスマホ</b><span>予約シミュレーション</span></div><div class="ride-phone"><div class="phone-status"><span id="phoneClock">09:00</span><span class="phone-island"></span><span>▮▮▮ ▰</span></div><div class="ride-app-head"><b>yohaku<span> ride</span></b><span class="ride-avatar">人</span></div><div class="ride-heading"><span class="ride-kicker">まちの乗合バス</span><h2>どちらへ<br>出かけますか？</h2><p>あなたの予定に、バスが寄り道。</p></div><form id="reservationForm"><div class="ride-location"><i class="pickup-pin"></i><label>乗車地<select id="reserveOrigin" aria-label="乗車地"></select></label></div><div class="ride-location"><i class="destination-pin"></i><label>目的地<select id="reserveDestination" aria-label="目的地"></select></label></div><div class="ride-location ride-time"><i class="pickup-clock">◷</i><label>迎えの希望時刻<input id="reserveTime" type="time" min="09:01" max="11:59" step="60" required aria-describedby="pickupTimeHelp"></label></div><div class="ride-vehicle"><span class="ride-bus-icon">▰<small>●　●</small></span><div><b>まちのバス</b><small>相乗り・各車4席</small></div><span class="ride-chip">片道</span></div><div class="reservation-terms"><span id="pickupTimeHelp">希望時刻以降に乗車 · 12:00までに到着<br>時刻ちょうどの迎えを確約するものではありません。</span></div><button id="reservationSubmit" type="submit">この移動を予約する <span>→</span></button></form><div id="rideProgress" class="ride-progress" aria-live="polite" hidden></div><button id="rideFollow" type="button" hidden>迎え・到着まで動かす ▶</button><p id="reservationNotice" class="notice" role="status"></p><div class="phone-home"></div></div><button id="demoSetup" class="demo-preset">↻ 9:40の実演へ（リセット）</button><p class="ride-help">実演：公園 → 病院を予約。左の地図で灰色の変更前ルートと、色付きの新ルートを見比べます。</p></section><section class="card"><div class="panel-head"><b>移動の達成状況</b><span id="phase" class="muted">途中経過</span></div><div id="stats"></div><p class="note">登録者は全訪問と帰着を期限内に完了した人数。追加予約は片道の到着、未予約者は12時までに到着した人数。</p></section><section class="card"><div class="panel-head"><b>運行ログ</b><span class="muted">最新8件</span></div><div id="logs" class="logs" aria-live="off"></div></section></aside></div>
+
+<section id="comparison" class="card comparison" hidden></section>
+<section class="card"><div class="panel-head"><div><b>登録者の予定</b><span class="muted">滞在中に予定を変えてみる</span></div><span class="tag">近い確定便は維持</span></div><div id="people" class="people"></div><p id="notice" class="notice" role="status">再生して滞在が始まると、「あと30分」を試せます。</p></section>
+<section class="card"><div class="panel-head"><b>未予約者の移動</b><span class="muted">発生後の実績だけを表示</span></div><div id="walkins" class="walkins"></div></section>
+<details class="card"><summary>この実験の見方・操作ガイド</summary>
+<h3>まずは予約でルートを変えてみる</h3><p>「9:40の実演へ（リセット）」を押し、公園→病院のまま「この移動を予約する」。灰色の線が予約前、緑・青の破線が追加後の今後15分の予定です。再生すると、バスが道路を走り、停留所の人を迎えにいきます。実行中の区間や近い確定便がある場合、コースの変更はその後に反映されます。過去15分の走行実績は薄い実線で表示します。</p><p>右のスマホ画面で乗車地・目的地・迎えの希望時刻を選び、予約すると迎え予定と乗車状況が表示されます。「迎え・到着まで動かす」で時間が進み、待機中の名前が乗車時に消え、到着まで追えます。希望時刻は現在より1分以上先に設定します。指定時刻より前には乗車せず、その時刻以降で迎えを計算します。到着期限の12時までに移動時間が足りない予約は受け付けません。迎え時刻は現在の配車計算による目安で、追加の乗車で変わる場合があります。地図は京都風の架空の街です。細い生活道路は景観表示で、バスは設定された主要道路を走ります。</p><h3>基本操作を1分で体験</h3>
+<ol class="guide">
+<li><b>バスを動かす：</b>「B 予定＋需要予測」とシード「42」のまま、「＋10分」を2回押して9:20へ進めます。「再生」なら自動で進み、もう一度押すと一時停止。速度は右のメニューで変えられます。</li>
+<li><b>予定を変える：</b>登録者の予定で、滞在中の佐藤さんの「あと30分」を押します。次の出発可能時刻が9:42から10:12に変わります。帰着期限は変わりません。運行を進め、後続の迎えや達成状況を見てください。</li>
+<li><b>同じ条件で比べる：</b>「A / B を最後まで比較」を押すと、AとBを同じシード・追加予約と予定変更なしで9時から12時まで計算し、結果を並べます。いま見ている地図の時刻と変更内容はそのままです。</li>
+<li><b>別の需要で試す：</b>シードを「1」に変えて比較すると、Bが必ず有利ではない例を見られます。「条件を再生成」でそのシードの運行を9時からやり直せます。A/Bの方式切り替えも運行と予定変更をリセットします。</li>
+</ol>
+<p><b>時間を自由に見返す：</b>時計の右のスライダーを動かすと、9:00〜12:00の任意の時刻へ1分単位で移動します。車両・待機者・達成状況・ログもその時刻に切り替わり、再生は一時停止します。予定変更は巻き戻しても保持されます。過去の時刻で新たに予定を変更した場合は、その時刻より後の変更を取り消して運行を再計算します。</p><h3>画面の読み方</h3>
+<p>緑の円は今後30分の予測需要で、実際の乗客数ではありません。オレンジの人型アイコンはその場にいる未予約者。青い人型アイコンと名前は予約して迎えを待っている人で、乗車すると地図上の名前が消えます。バスの数字は「車両番号・乗車人数」です。「未予約者の移動」と運行ログで、実際の乗車・到着を追えます。</p>
+<p>「あと30分」は滞在中に使えます。出発可能時刻まで10分以内、または次の迎えが確定済みの場合は変更を断ります。割り当てられない移動や期限内に終わらない予定も、成功として数えません。</p>
+<p>比べたいのは「何人多く運べたか」と「そのために何km走ったか」。登録者の達成率も一緒に見てください。このデモのシード42では、登録者はA/Bとも5人達成、未予約者はAが0人・Bが4人、距離は109.8km・154.8kmです。距離増加も含めて効果を考える実験です。</p>
+<h3>実験の条件と簡易版の範囲</h3><p>AもBも、停留所に来た時点で未予約者を確認し、運べる場合は受け入れます。Bだけが仮の期待需要を使って立ち寄ります。未来の発生時刻や、到着前の待機人数は配車に使いません。</p><p>結果は固定の道路と仮の需要から計算するもので、実地域での効果を保証しません。Bが必ず有利になる設定ではありません。比較ボタンは同じシード・追加予約と予定変更なしで最初からA/Bを実行します。</p><p>ブラウザ内で完結するHTML/JavaScript版です。AIによるコード作成支援を利用しています。需要予測は学習済みAIではなく仮定した分布です。</p><p id="engineNotes">簡易配車：固定道路の最短経路と貪欲な割当を使います。全訪問・全車両をまとめて最適化する方式ではありません。各車の次の迎え1件を確定し、その先は仮計画にします。出発可能時刻と帰着期限をもとに次便を割り当て、10分以内の便の変更は拒否します。将来の全訪問を含めた厳密な挿入最適化は本格版の追加範囲です。</p></details>
+<footer>まちの余白 — 予定のある人にも、まだ予約していない人にも。<span>HACKATHON 2026 / LOCAL SIMULATION</span></footer></main><script>/* BusSim: dependency-free, deterministic demo simulation.
+ * Simplification: routing uses a fixed road graph and greedy insertion scoring;
+ * it is deliberately not an optimiser. A road-minute is 0.45 km for display.
+ */
+(function (root, factory) {
+  var api = factory();
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  if (root) root.BusSim = api;
+}(typeof window !== 'undefined' ? window : globalThis, function () {
+  'use strict';
+
+  var nodes = [
+    { id: 'station', name: '駅', x: 380, y: 220 },
+    { id: 'homeA', name: '住宅地A', x: 110, y: 105 },
+    { id: 'homeB', name: '住宅地B', x: 115, y: 355 },
+    { id: 'hospital', name: '病院', x: 580, y: 90 },
+    { id: 'mall', name: '商業施設', x: 640, y: 325 },
+    { id: 'park', name: '公園', x: 360, y: 405 }
+  ];
+  // [from, to, road minutes]. Roads are usable in both directions.
+  var edges = [
+    ['station', 'homeA', 8], ['station', 'homeB', 8], ['station', 'hospital', 7],
+    ['station', 'mall', 7], ['station', 'park', 6], ['homeA', 'hospital', 8],
+    ['homeB', 'park', 7], ['park', 'mall', 7], ['hospital', 'mall', 8]
+  ];
+  var byId = {}; nodes.forEach(function (n) { byId[n.id] = n; });
+  var graph = {};
+  nodes.forEach(function (n) { graph[n.id] = []; });
+  edges.forEach(function (e) { graph[e[0]].push([e[1], e[2]]); graph[e[1]].push([e[0], e[2]]); });
+
+  function rng(seed) { // Mulberry32, accepting strings too.
+    var h = 1779033703;
+    String(seed == null ? 1 : seed).split('').forEach(function (c) { h = Math.imul(h ^ c.charCodeAt(0), 3432918353); h = (h << 13) | (h >>> 19); });
+    return function () { h = Math.imul(h ^ (h >>> 16), 2246822507); h = Math.imul(h ^ (h >>> 13), 3266489909); return ((h ^= h >>> 16) >>> 0) / 4294967296; };
+  }
+  function path(from, to) {
+    var dist = {}, prev = {}, open = [from];
+    nodes.forEach(function (n) { dist[n.id] = Infinity; }); dist[from] = 0;
+    while (open.length) {
+      open.sort(function (a, b) { return dist[a] - dist[b]; });
+      var u = open.shift(); if (u === to) break;
+      graph[u].forEach(function (e) { var v = e[0], d = dist[u] + e[1]; if (d < dist[v]) { dist[v] = d; prev[v] = u; if (open.indexOf(v) < 0) open.push(v); } });
+    }
+    var result = [to]; while (result[0] !== from) { if (!prev[result[0]]) return { nodes: [from], minutes: Infinity }; result.unshift(prev[result[0]]); }
+    return { nodes: result, minutes: dist[to] };
+  }
+  function legMinutes(a, b) { return path(a, b).minutes; }
+  function personDestination(p) {
+    if (p.kind === 'walkin' || p.oneWay) return p.destination;
+    return p.returning ? p.origin : p.visits[p.visitIndex];
+  }
+  function log(s, text) { s.logs.push('[' + String(s.time).padStart(3, '0') + '] ' + text); }
+  function clone(v) { return JSON.parse(JSON.stringify(v)); }
+
+  function makeRegistered() {
+    return [
+      ['r1', '佐藤さん', 'homeA', ['hospital'], [25], 0, 130],
+      ['r2', '鈴木さん', 'homeB', ['mall', 'park'], [30, 20], 4, 155],
+      ['r3', '田中さん', 'homeA', ['station'], [15], 12, 110],
+      ['r4', '高橋さん', 'homeB', ['hospital'], [35], 18, 165],
+      ['r5', '伊藤さん', 'homeA', ['mall', 'station'], [20, 15], 25, 175]
+    ].map(function (x) { return { id: x[0], name: x[1], kind: 'registered', origin: x[2], destination: x[3][0], node: x[2], status: 'pending', readyAt: x[5], deadline: x[6], visits: x[3], stays: x[4], visitIndex: 0, returning: false, planBus: null, locked: false, completedVisits: [], completedStays: [] }; });
+  }
+  function makeWalkins(random) {
+    var origins = ['homeA', 'homeB', 'hospital', 'mall', 'park'];
+    return origins.map(function (origin, i) {
+      var choices = nodes.map(function (n) { return n.id; }).filter(function (id) { return id !== origin; });
+      return { id: 'w' + (i + 1), name: '未予約' + (i + 1), kind: 'walkin', origin: origin, destination: choices[Math.floor(random() * choices.length)], node: origin, status: 'pending', readyAt: 15 + Math.floor(random() * 125), deadline: 0, visits: [], stays: [], visitIndex: 0, planBus: null, locked: false, completedVisits: [], completedStays: [] };
+    });
+  }
+  function create(seed, mode) {
+    var random = rng(seed);
+    var s = { time: 0, mode: mode === 'A' ? 'A' : 'B', seed: seed == null ? 1 : seed,
+      buses: [{ id: 'bus1', node: 'station', edge: null, onboard: [], route: [], distance: 0 }, { id: 'bus2', node: 'station', edge: null, onboard: [], route: [], distance: 0 }],
+      people: makeRegistered().concat(makeWalkins(random)), logs: [], boardingChecks: [], capacity: 4, finished: false };
+    log(s, '条件生成: mode ' + s.mode + ', seed ' + s.seed);
+    return s;
+  }
+  function forecastIn(state, nodeId, time) {
+    // Expected *new* arrivals in [time,time+30), never looks at actual people.
+    var i = nodes.map(function (n) { return n.id; }).indexOf(nodeId);
+    var wave = Math.floor(time / 30);
+    var raw = ((i * 7 + wave * 5) % 9) / 3;
+    return Math.round(raw * 10) / 10;
+  }
+  function forecast(nodeId, time) {
+    // Public forecast is intentionally independent of actual waiting people.
+    return forecastIn(null, nodeId, time);
+  }
+  function personById(s, id) { return s.people.filter(function (p) { return p.id === id; })[0]; }
+  function waitingAt(s, node, registeredOnly) { return s.people.filter(function (p) { return p.status === 'waiting' && p.node === node && (!registeredOnly || p.kind === 'registered'); }); }
+  function pickBusFor(s, p) {
+    // Greedy insertion score: current immutable edge/onboard work is retained;
+    // candidate pickup is appended after it, and the earliest feasible bus wins.
+    var best = null;
+    s.buses.forEach(function (b) {
+      var anchor = b.edge ? b.edge.to : b.node, extra = legMinutes(anchor, p.node) + legMinutes(p.node, personDestination(p));
+      var locked = b.edge ? (b.edge.duration - b.edge.elapsed) : 0;
+      // Earlier planned legs form the insertion baseline. This is intentionally
+      // greedy, but prevents all future reservations from collapsing on bus1.
+      var planned = s.people.filter(function (q) { return q !== p && q.kind === 'registered' && q.planBus === b.id && ['pending', 'staying', 'waiting'].indexOf(q.status) >= 0; })
+        .reduce(function (sum, q) { return sum + legMinutes(anchor, q.node) + legMinutes(q.node, personDestination(q)); }, 0);
+      var score = locked + planned + extra + b.onboard.length * 3;
+      if (!best || score < best.score || (score === best.score && b.id < best.bus.id)) best = { bus: b, score: score };
+    });
+    return best && best.score <= Math.max(0, p.deadline - s.time) ? best.bus : null;
+  }
+  function scheduleReservations(s) {
+    // Simplification declared: each bus confirms only its *next* pickup.
+    // Later registered legs remain soft plans, avoiding mutually impossible
+    // simultaneous promises while still preserving the next 10-minute booking.
+    s.buses.forEach(function (b) {
+      var held = b.confirmedPickupId && personById(s, b.confirmedPickupId);
+      if (!held || ['pending', 'staying', 'waiting'].indexOf(held.status) < 0) b.confirmedPickupId = null;
+    });
+    var active = s.people.filter(function (p) { return p.kind === 'registered' && ['pending', 'staying', 'waiting'].indexOf(p.status) >= 0; })
+      .sort(function (a, b) { return a.readyAt - b.readyAt || a.id.localeCompare(b.id); });
+    active.forEach(function (p) { if (!p.locked) { var soft = pickBusFor(s, p); if (soft) p.planBus = soft.id; } });
+    s.buses.forEach(function (b) {
+      if (b.confirmedPickupId) return;
+      var candidates = active.filter(function (p) { return !p.locked && !p.unassigned && p.planBus === b.id && p.readyAt - s.time <= 10; });
+      if (!candidates.length) return;
+      var p = candidates[0], pickup = estimatePickupAt(s, b, p);
+      if (pickup <= 180 && pickup <= p.deadline - legMinutes(p.node, personDestination(p))) {
+        p.locked = true; p.pickupAt = pickup; b.confirmedPickupId = p.id;
+      } else { p.planBus = null; p.unassigned = true; log(s, p.name + ' は確定便に挿入できず未割当'); }
+    });
+  }
+  function activatePeople(s) {
+    s.people.forEach(function (p) {
+      if (p.status === 'pending' && s.time >= p.readyAt) {
+        p.status = 'waiting';
+        // For a walk-in this is a boarding cutoff, not an arrival deadline.
+        if (p.kind === 'walkin') { p.waitUntil = s.time + 30; p.deadline = p.waitUntil; }
+        log(s, p.name + ' が ' + byId[p.node].name + ' で待機開始');
+      }
+      if (p.status === 'staying' && s.time >= p.readyAt) {
+        p.completedStays.push({ node: p.node, minutes: s.time - p.stayStartedAt });
+        p.status = 'waiting';
+        if (p.visitIndex >= p.visits.length) { p.returning = true; p.destination = p.origin; }
+        else p.destination = personDestination(p);
+        log(s, p.name + ' の次の移動が可能');
+      }
+      if (p.status === 'waiting' && s.time > (p.kind === 'walkin' ? p.waitUntil : p.deadline)) { p.status = 'missed'; log(s, p.name + ' は' + (p.kind === 'walkin' ? '待機時間切れ' : '期限超過')); }
+    });
+  }
+  function busAnchor(s, b) {
+    if (!b.edge) return { node: b.node, time: s.time };
+    return { node: b.edge.to, time: s.time + (b.edge.duration - b.edge.elapsed) };
+  }
+  function projectedDropoffs(s, b, candidate) {
+    var riders = b.onboard.map(function (id) { return personById(s, id); }).filter(Boolean);
+    if (candidate) riders.push(candidate);
+    var anchor = busAnchor(s, b), at = anchor.node, time = anchor.time, result = [];
+    while (riders.length) {
+      riders.sort(function (a, c) { return legMinutes(at, personDestination(a)) - legMinutes(at, personDestination(c)); });
+      var p = riders.shift(), d = legMinutes(at, personDestination(p)); time += d; at = personDestination(p); result.push({ person: p, time: time, node: at });
+    }
+    return { time: time, node: at, stops: result };
+  }
+  function estimatePickupAt(s, b, p) {
+    var projection = projectedDropoffs(s, b, null);
+    return Math.max(p.readyAt, projection.time + legMinutes(projection.node, p.node));
+  }
+  function canBoard(s, b, p) {
+    if (b.onboard.length >= s.capacity) return false;
+    var before = projectedDropoffs(s, b, null), projection = projectedDropoffs(s, b, p), ok = true;
+    var beforeTimes = {}; before.stops.forEach(function (stop) { beforeTimes[stop.person.id] = stop.time; });
+    projection.stops.forEach(function (stop) {
+      if (stop.time > 180) ok = false;
+      if (stop.person.kind === 'registered' && stop.time > stop.person.deadline) ok = false;
+      // A walk-in is accepted only when no existing onboard person's committed
+      // arrival gets later; its 30-minute limit was checked before boarding.
+      if (beforeTimes[stop.person.id] != null && stop.time > beforeTimes[stop.person.id]) ok = false;
+    });
+    // Do not accept a walk-in when it would make a confirmed pickup impossible.
+    s.people.filter(function (q) { return q !== p && q.id === b.confirmedPickupId && q.kind === 'registered' && ['pending', 'staying', 'waiting'].indexOf(q.status) >= 0; }).forEach(function (q) {
+      var pickup = projection.time + legMinutes(projection.node, q.node);
+      if (pickup > q.pickupAt || pickup > 180) ok = false;
+    });
+    if (p.kind === 'walkin') s.boardingChecks.push({ time: s.time, busId: b.id, personId: p.id, accepted: ok,
+      before: before.stops.map(function (stop) { return { personId: stop.person.id, time: stop.time }; }),
+      after: projection.stops.map(function (stop) { return { personId: stop.person.id, time: stop.time }; }) });
+    return ok;
+  }
+  function arrive(s, b) {
+    var leaving = b.onboard.slice();
+    leaving.forEach(function (id) {
+      var p = personById(s, id);
+      if (p && personDestination(p) === b.node) {
+        b.onboard.splice(b.onboard.indexOf(id), 1); p.node = b.node;
+        if (p.kind === 'walkin' || p.oneWay) { p.completedVisits.push(b.node); p.status = s.time <= 180 && (p.kind === 'walkin' || s.time <= p.deadline) ? 'done' : 'missed'; if (p.status === 'done') p.completedAt = s.time; log(s, p.name + (p.status === 'done' ? ' が目的地に到着' : ' が12時超過')); }
+        else if (!p.returning) {
+          p.completedVisits.push(b.node); p.visitIndex++; p.status = 'staying'; p.stayStartedAt = s.time; p.readyAt = s.time + (p.stays[p.visitIndex - 1] || 0); p.planBus = null; p.pickupAt = null; p.locked = false;
+          log(s, p.name + ' が ' + byId[b.node].name + ' で滞在開始');
+        } else { p.status = s.time <= 180 && s.time <= p.deadline ? 'done' : 'missed'; if (p.status === 'done') p.completedAt = s.time; log(s, p.name + (p.status === 'done' ? ' が帰着・達成' : ' が期限超過')); }
+      }
+    });
+    // This is the only point a walk-in is visible to a bus: no remote dispatch on it.
+    waitingAt(s, b.node, false).sort(function (a, c) { return (a.kind === 'registered' ? 0 : 1) - (c.kind === 'registered' ? 0 : 1) || a.id.localeCompare(c.id); }).forEach(function (p) {
+      if (b.onboard.length < s.capacity && (p.kind === 'walkin' || p.planBus === b.id || !p.locked) && canBoard(s, b, p)) { b.onboard.push(p.id); p.status = 'onboard'; p.boardedAt = s.time; p.planBus = b.id; log(s, p.name + ' が ' + b.id + ' に乗車'); }
+    });
+  }
+  function startEdge(s, b, to) {
+    if (!to || to === b.node) return;
+    var route = path(b.node, to); if (route.nodes.length < 2) return;
+    // route is strictly the future itinerary, never a travel history.
+    b.route = route.nodes.slice(1);
+    var next = b.route[0], duration = graph[b.node].filter(function (e) { return e[0] === next; })[0][1];
+    b.edge = { from: b.node, to: next, elapsed: 0, duration: duration };
+  }
+  function canForecastDetour(s, b, target) {
+    var anchor = busAnchor(s, b), time = anchor.time + legMinutes(anchor.node, target), at = target;
+    var commitments = s.people.filter(function (p) { return p.id === b.confirmedPickupId || (p.kind === 'registered' && p.planBus === b.id && ['pending', 'staying'].indexOf(p.status) >= 0); }).sort(function (a, c) { return a.readyAt - c.readyAt; }).slice(0, 1);
+    for (var i = 0; i < commitments.length; i++) {
+      var p = commitments[i]; time += legMinutes(at, p.node); at = p.node;
+      // Unlocked future requests are still planning constraints; only their
+      // final pickup timestamp may be recalculated. Locked ones use pickupAt.
+      if (time > (p.pickupAt == null ? p.readyAt : p.pickupAt)) return false;
+      if (time < p.readyAt) time = p.readyAt;
+    }
+    return time <= 180;
+  }
+  function chooseMove(s, b) {
+    arrive(s, b);
+    var aboard = b.onboard.map(function (id) { return personById(s, id); }).filter(Boolean);
+    if (aboard.length) { aboard.sort(function (a, c) { return legMinutes(b.node, personDestination(a)) - legMinutes(b.node, personDestination(c)); }); startEdge(s, b, personDestination(aboard[0])); return; }
+    var confirmed = b.confirmedPickupId && personById(s, b.confirmedPickupId);
+    if (confirmed && ['pending', 'staying', 'waiting'].indexOf(confirmed.status) >= 0) { if (b.node !== confirmed.node) startEdge(s, b, confirmed.node); return; }
+    var reservations = s.people.filter(function (p) { return p.kind === 'registered' && p.status === 'waiting' && p.planBus === b.id; });
+    reservations.sort(function (a, c) { return legMinutes(b.node, a.node) - legMinutes(b.node, c.node) || a.deadline - c.deadline; });
+    if (reservations.length) { startEdge(s, b, reservations[0].node); return; }
+    if (s.mode === 'B') {
+      var target = null, score = 0;
+      nodes.forEach(function (n) { var d = legMinutes(b.node, n.id), value = forecastIn(s, n.id, s.time + d) - d * 0.09; if (n.id !== b.node && canForecastDetour(s, b, n.id) && value > score) { score = value; target = n.id; } });
+      if (target) { log(s, b.id + ' が予測需要へ回送'); startEdge(s, b, target); }
+    } else if (b.node !== 'station') startEdge(s, b, 'station');
+  }
+  function step(s) {
+    if (!s || !s.buses || !s.people) throw new Error('BusSim state is required');
+    if (s.finished || s.time >= 180) { s.finished = true; return s; }
+    s.time++;
+    activatePeople(s);
+    scheduleReservations(s);
+    s.buses.forEach(function (b) {
+      if (b.edge) { b.edge.elapsed++; b.distance += 0.45; if (b.edge.elapsed >= b.edge.duration) { b.node = b.edge.to; if (b.route[0] === b.node) b.route.shift(); b.edge = null; log(s, b.id + ' が ' + byId[b.node].name + ' に到着'); } }
+      if (!b.edge) chooseMove(s, b);
+    });
+    if (s.time >= 180) { s.finished = true; log(s, '12時: シミュレーション終了'); }
+    return s;
+  }
+  function extend(s, personId) {
+    var p = s.people.filter(function (q) { return q.id === personId; })[0];
+    if (!p) return { ok: false, message: '利用者が見つかりません' };
+    if (p.kind !== 'registered' || p.status !== 'staying') return { ok: false, message: '滞在中の登録者のみ延長できます' };
+    if (p.locked || p.readyAt - s.time <= 10) return { ok: false, message: '10分以内の確定便は変更できません' };
+    p.readyAt += 30; p.planBus = null; p.pickupAt = null;
+    // Existing bus edges/onboard movements stay fixed; only this later leg is recomputed.
+    log(s, p.name + ' の滞在を30分延長（後続便を再計算）');
+    return { ok: true, message: p.name + ' の滞在を30分延長しました' };
+  }
+  function addReservation(s, request) {
+    if (!request || !byId[request.origin] || !byId[request.destination] || request.origin === request.destination)
+      return { ok: false, message: '異なる出発地と目的地を選んでください' };
+    var ready = Number(request.readyAt), deadline = Number(request.deadline);
+    if (s.time >= 180 || !Number.isInteger(ready) || !Number.isInteger(deadline) || ready < s.time + 1 || deadline > 180 || deadline < ready + legMinutes(request.origin, request.destination))
+      return { ok: false, message: '出発は現在より1分以上先、到着期限は移動時間を含め12時までに設定してください' };
+    var serial = s.people.filter(function(p) { return p.oneWay; }).length + 1;
+    var id = 'extra' + serial;
+    s.people.push({ id: id, name: '追加予約' + serial, kind: 'registered', oneWay: true,
+      origin: request.origin, destination: request.destination, node: request.origin,
+      status: 'pending', readyAt: ready, deadline: deadline, visits: [], stays: [],
+      visitIndex: 0, returning: false, planBus: null, locked: false,
+      completedVisits: [], completedStays: [] });
+    log(s, '追加予約' + serial + ': ' + byId[request.origin].name + ' → ' + byId[request.destination].name + '（片道）を登録');
+    return { ok: true, id: id, message: '追加予約' + serial + ' を登録しました。次の配車から反映します' };
+  }
+  function metrics(s) {
+    var registered = s.people.filter(function (p) { return p.kind === 'registered' && p.status === 'done'; }).length;
+    var walkin = s.people.filter(function (p) { return p.kind === 'walkin' && p.status === 'done'; }).length;
+    var unmet = {}; nodes.forEach(function (n) { unmet[n.name] = 0; });
+    s.people.filter(function (p) { return p.kind === 'walkin' && p.status !== 'done'; }).forEach(function (p) { unmet[byId[p.origin].name]++; });
+    return { registered: registered, walkin: walkin, distance: Math.round(s.buses.reduce(function (sum, b) { return sum + b.distance; }, 0) * 10) / 10, unmet: unmet };
+  }
+  return { nodes: clone(nodes), edges: clone(edges), create: create, step: step, extend: extend, metrics: metrics, forecast: forecast, addReservation: addReservation };
+}));
+</script><script>/* Minute-by-minute snapshots preserve schedule edits when scrubbing backward.
+ * An edit made in the past starts a new future from that minute. */
+(function(root,factory){
+  if(typeof module!=='undefined'&&module.exports)module.exports=factory(require('./engine.js'));
+  else root.BusTimeline=factory(root.BusSim);
+})(typeof window!=='undefined'?window:globalThis,function(S){
+  'use strict';
+  function create(seed,mode){
+    let state=S.create(seed,mode);
+    const history=[structuredClone(state)];
+    function seek(minute){
+      const target=Math.max(0,Math.min(180,Math.round(Number(minute)||0)));
+      if(target>=history.length){
+        state=structuredClone(history[history.length-1]);
+        while(state.time<target){S.step(state);history.push(structuredClone(state));}
+      }
+      state=structuredClone(history[target]);
+      return state;
+    }
+    function extend(personId){
+      const result=S.extend(state,personId);
+      if(result.ok){history.length=state.time+1;history[state.time]=structuredClone(state);}
+      return result;
+    }
+    function reserve(request){
+      const result=S.addReservation(state,request);
+      if(result.ok){history.length=state.time+1;history[state.time]=structuredClone(state);}
+      return result;
+    }
+    function preview(minutes=15){
+      const projected=structuredClone(state);
+      // The plan knows onboard riders, never unobserved waiting or future walk-ins.
+      projected.people=projected.people.filter(p=>p.kind!=='walkin'||p.status==='onboard');
+      const result=[structuredClone(projected)];
+      const end=Math.min(180,state.time+minutes);
+      while(projected.time<end){S.step(projected);result.push(structuredClone(projected));}
+      return result;
+    }
+    function past(minutes=15){return history.slice(Math.max(0,state.time-minutes),state.time+1).map(s=>structuredClone(s));}
+    return {get state(){return state},seek,advance(n){return seek(state.time+n)},extend,reserve,preview,past};
+  }
+  return {create};
+});
+</script><script>/* CityMap: dependency-free illustrated map for the BusSim demo. */
+(function (root, factory) {
+  var api = factory();
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  if (root) root.CityMap = api;
+}(typeof window !== 'undefined' ? window : globalThis, function () {
+  'use strict';
+
+  var nodes = {
+    station: { id: 'station', name: '駅', x: 380, y: 220 },
+    homeA: { id: 'homeA', name: '住宅地A', x: 110, y: 105 },
+    homeB: { id: 'homeB', name: '住宅地B', x: 115, y: 355 },
+    hospital: { id: 'hospital', name: '病院', x: 580, y: 90 },
+    mall: { id: 'mall', name: '商業施設', x: 640, y: 325 },
+    park: { id: 'park', name: '公園', x: 360, y: 405 }
+  };
+  var nodeList = Object.keys(nodes).map(function (id) { return nodes[id]; });
+  var host = typeof globalThis !== 'undefined' ? globalThis : {};
+  // Orthogonal main streets; narrow background lanes are scenery only.
+  var roads = {
+    'homeA|station': [[110,105],[110,160],[380,160],[380,220]],
+    'homeB|station': [[115,355],[115,280],[380,280],[380,220]],
+    'hospital|station': [[380,220],[500,220],[500,90],[580,90]],
+    'mall|station': [[380,220],[640,220],[640,325]],
+    'park|station': [[380,220],[380,350],[360,350],[360,405]],
+    'homeA|hospital': [[110,105],[110,90],[580,90]],
+    'homeB|park': [[115,355],[115,405],[360,405]],
+    'mall|park': [[360,405],[640,405],[640,325]],
+    'hospital|mall': [[580,90],[640,90],[640,325]]
+  };
+  var colors = ['#287959', '#557daf'];
+  var previous = {};
+
+  function esc(value) { return String(value == null ? '' : value).replace(/[&<>"']/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]; }); }
+  function key(a, b) { return a < b ? a + '|' + b : b + '|' + a; }
+  function points(a, b) {
+    var p = roads[key(a, b)] || [[nodes[a].x, nodes[a].y], [nodes[b].x, nodes[b].y]];
+    // Keys are sorted for lookup only; their authored point direction is not.
+    return p[0][0] === nodes[a].x && p[0][1] === nodes[a].y ? p : p.slice().reverse();
+  }
+  function lineLength(p) { var n = 0, i; for (i = 1; i < p.length; i++) n += Math.hypot(p[i][0] - p[i - 1][0], p[i][1] - p[i - 1][1]); return n; }
+  function onLine(p, fraction) {
+    var total = lineLength(p), target = Math.max(0, Math.min(1, Number(fraction) || 0)) * total, seen = 0, i, d, t;
+    for (i = 1; i < p.length; i++) { d = Math.hypot(p[i][0] - p[i - 1][0], p[i][1] - p[i - 1][1]); if (seen + d >= target || i === p.length - 1) { t = d ? (target - seen) / d : 0; return { x: p[i - 1][0] + (p[i][0] - p[i - 1][0]) * t, y: p[i - 1][1] + (p[i][1] - p[i - 1][1]) * t, angle: Math.atan2(p[i][1] - p[i - 1][1], p[i][0] - p[i - 1][0]) * 180 / Math.PI }; } seen += d; }
+    return { x: p[0][0], y: p[0][1], angle: 0 };
+  }
+  function position(bus) {
+    var edge = bus && bus.edge;
+    if (!edge) { var n = nodes[bus && bus.node] || nodes.station; return { x: n.x, y: n.y, angle: 0 }; }
+    return onLine(points(edge.from, edge.to), (Number(edge.elapsed) || 0) / Math.max(1, Number(edge.duration) || 1));
+  }
+  function poly(p) { return p.map(function (q) { return q[0] + ',' + q[1]; }).join(' '); }
+  function roadPath(p) { return 'M' + p.map(function (q, i) { return (i ? ' L' : '') + q[0] + ' ' + q[1]; }).join(''); }
+  function offsetPoint(n, i) { var a = -Math.PI / 2 + i * 0.72, r = 28 + Math.floor(i / 3) * 13; return { x: n.x + Math.cos(a) * r, y: n.y + Math.sin(a) * r }; }
+  function stateBus(s, id, fallback) { return (s && s.buses || []).filter(function (b) { return b.id === id; })[0] || (s && s.buses || [])[fallback]; }
+  function edgeFraction(edge) { return (Number(edge.elapsed) || 0) / Math.max(1, Number(edge.duration) || 1); }
+  function roadSlice(edge, from, to) {
+    var p = points(edge.from, edge.to), total = lineLength(p), start = edgeFraction(edge), end = edgeFraction(to.edge || edge), seen = 0, d, result = [from], i;
+    for (i = 1; i < p.length; i++) { d = Math.hypot(p[i][0] - p[i - 1][0], p[i][1] - p[i - 1][1]); seen += d; if (seen / total > start && seen / total < end) result.push({ x: p[i][0], y: p[i][1] }); }
+    result.push(to); return result;
+  }
+  function trace(states, bus, index) {
+    var snapshots = (states || []).map(function (s) { return stateBus(s, bus.id, index); }).filter(Boolean), result = [], i, a, b, ap, bp, segment;
+    for (i = 0; i < snapshots.length; i++) {
+      if (!i) { result.push(position(snapshots[i])); continue; }
+      a = snapshots[i - 1]; b = snapshots[i]; ap = position(a); bp = position(b);
+      if (a.edge && b.edge && a.edge.from === b.edge.from && a.edge.to === b.edge.to) segment = roadSlice(a.edge, ap, { x: bp.x, y: bp.y, edge: b.edge });
+      else if (a.edge && (!b.edge || b.edge.from === a.edge.to)) segment = roadSlice(a.edge, ap, { x: nodes[a.edge.to].x, y: nodes[a.edge.to].y, edge: { elapsed: a.edge.duration, duration: a.edge.duration } }).concat(b.edge ? roadSlice(b.edge, { x: nodes[b.edge.from].x, y: nodes[b.edge.from].y }, { x: bp.x, y: bp.y, edge: b.edge }).slice(1) : []);
+      else segment = [ap, bp];
+      result = result.concat(segment.slice(1));
+    }
+    return result;
+  }
+  function motionOnRoad(oldBus, bus, oldPos, pos) {
+    var a = oldBus && oldBus.edge, b = bus && bus.edge;
+    if (!a || !b || a.from !== b.from || a.to !== b.to) return null;
+    return roadSlice(a, oldPos, { x: pos.x, y: pos.y, edge: b }).map(function (q, i) { return (i ? ' L' : 'M') + q.x.toFixed(2) + ' ' + q.y.toFixed(2); }).join('');
+  }
+  function busGlyph(bus, i, pos, animate) {
+    var color = colors[i % colors.length], label = bus.number || String(i + 1), riders = (bus.onboard || []).length;
+    var motion = animate ? '<animateMotion begin="indefinite" dur="0.16s" path="' + esc(animate) + '" fill="freeze"/>' : '';
+    return '<g' + (animate ? '' : ' transform="translate(' + pos.x.toFixed(2) + ' ' + pos.y.toFixed(2) + ')"') + ' aria-label="バス' + esc(label) + ' 乗車' + riders + '人">' + motion + '<g transform="rotate(' + pos.angle.toFixed(1) + ')">' +
+      '<rect x="-18" y="-10" width="36" height="20" rx="5" fill="' + color + '" stroke="#fff" stroke-width="2"/>' +
+      '<rect x="-10" y="-7" width="15" height="6" rx="1.5" fill="#d8eef0"/><rect x="7" y="-7" width="6" height="6" rx="1.5" fill="#d8eef0"/>' +
+      '<circle cx="-10" cy="11" r="3" fill="#263b42"/><circle cx="10" cy="11" r="3" fill="#263b42"/>' +
+      '<text x="0" y="5" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">' + esc(label) + ' · ' + riders + '</text></g></g>';
+  }
+  function render(state, options) {
+    state = state || { buses: [], people: [], time: 0 }; options = options || {};
+    var out = '<title>京都の碁盤の目をイメージした架空の街。バスは主要道路を走行します。</title><rect width="760" height="500" fill="#ecebe5"/>';
+    var streets = [];
+    [40,110,180,245,310,380,440,500,570,640,733].forEach(function(x){streets.push([[x,0],[x,500]]);});
+    [35,90,160,220,280,350,405,465].forEach(function(y){streets.push([[0,y],[760,y]]);});
+    var allRoads=streets.concat(Object.keys(roads).map(function(k){return roads[k];}));
+    function nearRoad(x,y){return allRoads.some(function(p){return p.slice(1).some(function(q,i){var a=p[i];return x>=Math.min(a[0],q[0])-14&&x<=Math.max(a[0],q[0])+14&&y>=Math.min(a[1],q[1])-14&&y<=Math.max(a[1],q[1])+14;});});}
+    // Small roof footprints fill real street blocks, leaving roads and landmarks clear.
+    for(var x=8;x<752;x+=19)for(var y=8;y<493;y+=18){
+      if(nearRoad(x+7,y+6)||x>665&&x<716||x>315&&x<425&&y>360&&y<450||x>180&&x<300&&y>30&&y<85)continue;
+      var tone=['#d7d2c8','#ded9ce','#cecfc8','#e0d5c7'][(x*3+y)%4];
+      out+='<rect x="'+x+'" y="'+y+'" width="14" height="12" rx="1" fill="'+tone+'" stroke="#c5c3ba" stroke-width=".5"/><path d="M'+(x+2)+' '+(y+3)+'h10" stroke="#efede7" stroke-width="1"/>';
+    }
+    streets.forEach(function(p){out+='<path d="'+roadPath(p)+'" fill="none" stroke="#d9d8d0" stroke-width="9"/><path d="'+roadPath(p)+'" fill="none" stroke="#faf9f4" stroke-width="7"/>';});
+    out+='<path d="M694-20 Q674 150 694 260 T690 520" fill="none" stroke="#c9dcc5" stroke-width="44"/><path d="M694-20 Q674 150 694 260 T690 520" fill="none" stroke="#a8d1d9" stroke-width="28"/><path d="M693 0Q677 150 695 260T689 500" fill="none" stroke="#c6e3e8" stroke-width="2"/>';
+    [90,220,350,465].forEach(function(y){out+='<path d="M662 '+y+'h57" stroke="#b5bab4" stroke-width="13"/><path d="M661 '+y+'h59" stroke="#f9f8f1" stroke-width="9"/>';});
+    Object.keys(roads).forEach(function(k){out+='<path d="'+roadPath(roads[k])+'" fill="none" stroke="#cdcfc8" stroke-width="18" stroke-linejoin="round"/>';});
+    Object.keys(roads).forEach(function(k){out+='<path d="'+roadPath(roads[k])+'" fill="none" stroke="#fffefa" stroke-width="14" stroke-linejoin="round"/>';});
+    // Crosswalks and avenue labels anchor the transport layer in a city street map.
+    [110,380,500,640].forEach(function(x){[90,220,280,405].forEach(function(y){out+='<path d="M'+(x-5)+' '+(y+13)+'h10m-10 3h10m-10 3h10" stroke="#bec5bf" stroke-width="1.5"/>';});});
+    out+='<g font-size="8" fill="#92958b" letter-spacing="2"><text x="220" y="86">北山通</text><text x="270" y="216">御池通</text><text x="170" y="276">四条通</text><text x="450" y="401">七条通</text><text x="705" y="260" transform="rotate(90 705 260)">鴨川をイメージした川</text><text x="450" y="148">中京エリア</text><text x="170" y="338">下京エリア</text></g>';
+    out+='<g><rect x="190" y="43" width="107" height="36" rx="4" fill="#d6dec7"/><rect x="216" y="49" width="53" height="21" fill="#b9a999"/><path d="M208 53h68M216 47h53" stroke="#85766a" stroke-width="4"/><text x="243" y="77" text-anchor="middle" font-size="7" fill="#646f59">寺町の寺院</text></g>';
+    out+='<rect x="319" y="365" width="102" height="82" rx="6" fill="#d2dfc0"/><path d="M325 435L411 377M325 377L411 435" stroke="#ede5c9" stroke-width="4"/>';
+    for(var i=0;i<12;i++){var tx=327+(i%4)*27,ty=373+Math.floor(i/4)*32;out+='<circle cx="'+tx+'" cy="'+ty+'" r="5" fill="#a3bd8d"/>';}
+    out+='<g><rect x="518" y="44" width="76" height="30" rx="3" fill="#e1e5e4" stroke="#b4c0be"/><path d="M554 49v18m-9-9h18" stroke="#c17e79" stroke-width="4"/><rect x="585" y="293" width="39" height="42" rx="2" fill="#dfd0b5" stroke="#b9ac96"/><path d="M591 300h27m-27 8h27m-27 8h27" stroke="#f7ead2" stroke-width="4"/></g>';
+    out+='<path d="M20 244H465" stroke="#bbc1ba" stroke-width="8"/><path d="M20 244H465" stroke="#f5f4ed" stroke-width="5" stroke-dasharray="2 4"/><rect x="326" y="234" width="87" height="20" rx="3" fill="#abbab7"/><text x="369" y="247" text-anchor="middle" font-size="9" fill="white">まちの中央駅</text>';
+    nodeList.forEach(function(n){var f=host.BusSim?host.BusSim.forecast(n.id,state.time||0):0;var r=18+Math.sqrt(Math.max(0,f))*14;out+='<circle cx="'+n.x+'" cy="'+n.y+'" r="'+r+'" fill="#86b96d" fill-opacity=".10" stroke="#80a66e" stroke-opacity=".5" stroke-dasharray="3 5"/>';});
+    out+='<g transform="translate(16 16)"><rect width="143" height="23" rx="5" fill="white" fill-opacity=".94"/><text x="10" y="15" font-size="9" fill="#65716a">京都風の架空マップ · 北 ↑</text></g>';
+    // Reference lines draw at exact road positions, then the bus covers the current point.
+    [{ list: options.past, stroke: '#9ab2a8', width: 2, dash: '' }, { list: options.before, stroke: '#8f9695', width: 3, dash: '7 6' }, { list: options.future, stroke: null, width: 4, dash: '9 6' }].forEach(function (layer) { (state.buses || []).forEach(function (b, i) { var pts = trace(layer.list, b, i); if (pts.length > 1) out += '<polyline points="' + pts.map(function (q) { return q.x.toFixed(1) + ',' + q.y.toFixed(1); }).join(' ') + '" fill="none" stroke="' + (layer.stroke || colors[i % colors.length]) + '" stroke-width="' + layer.width + '" stroke-opacity=".72" stroke-dasharray="' + layer.dash + '" stroke-linecap="round"/>'; }); });
+    nodeList.forEach(function (n) { out += '<g transform="translate(' + n.x + ' ' + n.y + ')"><circle r="13" fill="#fff" stroke="#638b71" stroke-width="3"/><circle r="4" fill="#497b61"/><text y="-21" text-anchor="middle" font-size="12" font-weight="700" fill="#40584a" stroke="#fff" stroke-width="3" paint-order="stroke">' + esc(n.name) + '</text></g>'; });
+    nodeList.forEach(function (n) {
+      var waiting=(state.people||[]).filter(function(p){return p.status==='waiting'&&p.node===n.id;});
+      var x=n.x>500?n.x-112:n.x+20,y=Math.max(20,Math.min(n.y+16,482-waiting.length*21));
+      waiting.forEach(function(p,i){
+        var reserved=p.kind==='registered',color=reserved?'#5279ad':'#bd8639';
+        out+='<g class="map-waiter" data-person="'+esc(p.id)+'" transform="translate('+x+' '+(y+i*21)+')"><rect width="94" height="19" rx="6" fill="'+(reserved?'#edf3ff':'#fff3df')+'" stroke="'+(reserved?'#a5bddb':'#e1bc85')+'"/><circle cx="10" cy="5" r="3" fill="'+color+'"/><path d="M6 15v-4q4-5 8 0v4" fill="'+color+'"/><text x="19" y="13" font-size="11" fill="'+color+'">'+esc(reserved?p.name:'未予約で待機')+'</text></g>';
+      });
+    });
+    (state.buses || []).forEach(function (b, i) { var pos = position(b), old = previous[b.id], animate = '', draw = pos; var dt = old && Number(state.time) - Number(old.time); if (old && dt >= 1 && dt <= 3 && Math.hypot(pos.x - old.pos.x, pos.y - old.pos.y) < 180) { animate = motionOnRoad(old.bus, b, old.pos, pos); if (animate) draw = old.pos; } out += busGlyph(b, i, draw, animate); previous[b.id] = { time: state.time, pos: pos, bus: { edge: b.edge && { from: b.edge.from, to: b.edge.to, elapsed: b.edge.elapsed, duration: b.edge.duration } } }; });
+    (state.people || []).filter(function (p) { return p.status === 'onboard' && Number(state.time) - Number(p.boardedAt) <= 2; }).forEach(function (p, i) { var b = (state.buses || []).filter(function (q) { return (q.onboard || []).indexOf(p.id) >= 0; })[0]; if (b) { var q = position(b); out += '<g transform="translate(' + (q.x + 18) + ' ' + (q.y - 24 - i * 16) + ')"><rect width="54" height="14" rx="7" fill="#fff" stroke="#8bb895"/><text x="27" y="10" text-anchor="middle" font-size="8" fill="#3e7655">乗車しました</text></g>'; } });
+    return out;
+  }
+  return { render: render, position: position };
+}));
+</script><script>'use strict';
+const S=window.BusSim,$=id=>document.getElementById(id),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let mode='B',state,timeline,timer=null,beforePlan=null,bookingId=null,followingRide=false,pickupTimeEdited=false;const node=id=>S.nodes.find(n=>n.id===id),name=id=>node(id)?.name??id;const fmt=t=>`${String(9+Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}`;
+function stop(){clearInterval(timer);timer=null;followingRide=false;$('play').textContent='▶ 再生'}
+function reset(){stop();beforePlan=null;bookingId=null;pickupTimeEdited=false;timeline=window.BusTimeline.create(Number($('seed').value)||42,mode);state=timeline.state;$('comparison').hidden=true;$('reservationNotice').textContent='「9:40の実演へ」→ 公園から病院を予約 → 再生。追加予約は登録者の集計に加わります。';$('notice').textContent='再生して滞在が始まると、「あと30分」を試せます。';render()}
+function advance(n){state=timeline.advance(n);if(state.time>=180||followingRide&&state.people.some(p=>p.id===bookingId&&['done','missed'].includes(p.status)))stop();render()}
+function seek(minute){stop();beforePlan=null;state=timeline.seek(minute);render()}
+function renderMap(){
+const future=timeline.preview(15),past=timeline.past(15);
+const before=beforePlan&&state.time>=beforePlan[0].time?beforePlan.filter(s=>s.time>=state.time):null;
+$('map').innerHTML=window.CityMap.render(state,{past,future,before});
+$('map').querySelectorAll('animateMotion').forEach(animation=>animation.beginElement());
+$('routeWindow').textContent=`実績 ${fmt(Math.max(0,state.time-15))}〜${fmt(state.time)} / 予定 ${fmt(state.time)}〜${fmt(Math.min(180,state.time+15))}`;
+$('beforeLegend').hidden=!before?.length;
+$('planCards').innerHTML=state.buses.map((bus,i)=>{
+const stops=[];let at=bus.node;
+for(const snapshot of future){const b=snapshot.buses[i];if(b.node!==at){stops.push(`${fmt(snapshot.time)} ${esc(name(b.node))}`);at=b.node;}}
+const oldStops=[];let oldAt=before?.[0]?.buses[i]?.node;
+for(const snapshot of before||[]){const b=snapshot.buses[i];if(b.node!==oldAt){oldStops.push(`${fmt(snapshot.time)} ${esc(name(b.node))}`);oldAt=b.node;}}
+return `<div class="plan-card"><b style="color:${i?'#557daf':'#287959'}">バス${i+1} / 今後15分</b><span>${stops.join(' → ')||'この時間帯の停留所到着予定はありません'}</span>${before?.length?`<small>変更前：${oldStops.join(' → ')||'この時間帯の停留所到着予定なし'}</small>`:''}</div>`;
+}).join('');
+}
+const statuses={pending:'出発前',waiting:'迎え待ち',onboard:'乗車中',staying:'滞在中',done:'完了',missed:'未割当／期限超過'};
+function render(){const m=S.metrics(state),registeredTotal=state.people.filter(p=>p.kind==='registered').length;$('modeA').classList.toggle('selected',mode==='A');$('modeB').classList.toggle('selected',mode==='B');$('modeTitle').textContent=mode==='A'?'A 予定のみ':'B 予定＋需要予測';$('clock').textContent=fmt(state.time);$('timeSlider').value=state.time;$('timeSlider').setAttribute('aria-valuetext',fmt(state.time));$('timeSlider').style.setProperty('--elapsed',`${state.time/180*100}%`);$('phase').textContent=state.time>=180?'12:00 最終結果':'途中経過';$('play').disabled=state.time>=180;$('step').disabled=state.time>=180;$('reservationSubmit').disabled=state.time>=180;$('population').textContent=state.people.length;
+$('stats').innerHTML=[['登録者の予定達成',m.registered,`/ ${registeredTotal}人`,registeredTotal],['未予約者の移動達成',m.walkin,'/ 5人',5],['総走行距離',Number(m.distance).toFixed(1),'km',false]].map(([label,v,unit,bar])=>`<div class="stat"><div class="stat-label">${label}</div><div class="stat-value"><b>${v}</b><span>${unit}${bar?` · ${Math.round(Number(v)/bar*100)}%`:''}</span></div>${bar?`<div class="bar"><div style="width:${Math.round(Number(v)/bar*100)}%"></div></div>`:''}</div>`).join('');
+$('busCards').innerHTML=state.buses.map((b,i)=>`<div class="bus-card"><b style="color:${i?'#557daf':'#287959'}">● バス${i+1}</b>${b.onboard.length} / 4席<br>${b.edge?`${esc(name(b.edge.from))} → ${esc(name(b.edge.to))}`:`${esc(name(b.node))} に停車`}<br><span class="muted" style="margin:0">次の経由地：${(b.route||[]).slice(0,4).map(x=>esc(name(x))).join(' → ')||'待機'}</span></div>`).join('');
+$('logs').innerHTML=state.logs.slice(-8).reverse().map(l=>`<div>${esc(typeof l==='string'?l.replace(/^\[(\d+)\]/,(_,t)=>fmt(Number(t))):JSON.stringify(l))}</div>`).join('')||'<div>再生すると運行記録がここに表示されます。</div>';
+$('people').innerHTML=state.people.filter(p=>p.kind==='registered').map(p=>`<article class="person"><h3>${esc(p.name||p.id)}</h3><span class="status">${p.unassigned&&['pending','waiting','staying'].includes(p.status)?'未割当':statuses[p.status]||esc(p.status)}</span><p>${(p.oneWay?[p.origin,p.destination]:[p.origin,...p.visits,p.origin]).map(x=>esc(name(x))).join(' → ')}</p><div>${p.oneWay?'到着期限':'帰着期限'} ${fmt(p.deadline)}</div><div>${p.status==='staying'?`次の出発可能 ${fmt(p.readyAt)}`:`現在地 ${esc(p.status==='onboard'?'車内':name(p.node))}`}</div><button data-extend="${esc(p.id)}" ${p.status!=='staying'||state.time>=180?'disabled':''}>あと30分</button></article>`).join('');$('walkins').innerHTML=state.people.filter(p=>p.kind==='walkin').map(p=>`<div class="walkin"><b>${esc(p.name)}</b><span>${p.status==='pending'?'まだ発生していません':`${esc(name(p.origin))} → ${esc(name(p.destination))}`}</span><span class="status">${p.unassigned&&['pending','waiting','staying'].includes(p.status)?'未割当':statuses[p.status]||esc(p.status)}</span></div>`).join('');renderMap();renderRide()}
+function renderRide(){
+$('phoneClock').textContent=fmt(state.time);
+$('reserveTime').min=fmt(Math.min(180,state.time+1));
+if(!pickupTimeEdited)$('reserveTime').value=fmt(Math.min(179,state.time+3));
+$('reservationSubmit').disabled=state.time>=179;
+
+const p=state.people.find(p=>p.id===bookingId);
+$('rideProgress').hidden=!p;$('rideFollow').hidden=!p||['done','missed'].includes(p.status)||state.time>=180;
+if(!p)return;
+const prediction=timeline.preview(180-state.time);
+const pickup=prediction.find(s=>s.people.find(q=>q.id===p.id)?.status==='onboard');
+const arrival=prediction.find(s=>s.people.find(q=>q.id===p.id)?.status==='done');
+const bus=state.buses.find(b=>b.onboard.includes(p.id))||pickup?.buses.find(b=>b.onboard.includes(p.id));
+const title={pending:'迎えの便を調整しています',waiting:'停留所でお待ちください',onboard:'目的地へ向かっています',done:'目的地に到着しました',missed:'今回は配車できませんでした'}[p.status];
+const eta=p.status==='done'?`到着 ${fmt(p.completedAt)}`:p.status==='onboard'?(arrival?`到着予定 ${fmt(arrival.time)}`:'到着予定を再計算中'):(pickup?`迎え予定 ${fmt(pickup.time)}`:'迎え時刻は未確定');
+$('rideProgress').innerHTML=`<b>${esc(title||'予約受付済み')}</b><span class="ride-eta">${eta}</span><p>${esc(name(p.origin))} → ${esc(name(p.destination))}<br>希望時刻 ${fmt(p.readyAt)} 以降<br>${bus?`バス${state.buses.findIndex(b=>b.id===bus.id)+1} / `:''}${esc(p.name)}・${statuses[p.status]}</p><small>現在の予約から計算した目安です。運行状況で変わります。</small>`;
+}
+$('rideFollow').onclick=()=>{if(timer){stop();return;} $('speed').value='1';$('play').click();followingRide=true;};
+$('people').addEventListener('click',e=>{const b=e.target.closest('[data-extend]');if(!b)return;stop();beforePlan=timeline.preview();const r=timeline.extend(b.dataset.extend);state=timeline.state;$('notice').textContent=r.message+(r.ok?'。この時刻から先の運行を再計算します。':'');render()});
+$('play').onclick=()=>{if(timer)return stop();$('play').textContent='Ⅱ 一時停止';timer=setInterval(()=>advance(Number($('speed').value)),180)};$('step').onclick=()=>{stop();advance(10)};$('reset').onclick=reset;$('modeA').onclick=()=>{mode='A';reset()};$('modeB').onclick=()=>{mode='B';reset()};
+$('compare').onclick=()=>{stop();const seed=Number($('seed').value)||42;const a=S.create(seed,'A'),b=S.create(seed,'B');for(let i=0;i<180;i++){S.step(a);S.step(b)}const am=S.metrics(a),bm=S.metrics(b);const c=$('comparison');c.hidden=false;c.innerHTML=`<div class="panel-head"><b>同じ条件、2つの運行。</b><span class="tag">シード ${seed} / 追加予約・予定変更なし / 12:00</span></div><table><thead><tr><th>評価指標</th><th>A 予定のみ</th><th>B ＋需要予測</th></tr></thead><tbody><tr><td>登録者の予定達成率</td><td>${am.registered*20}%（${am.registered}/5人）</td><td>${bm.registered*20}%（${bm.registered}/5人）</td></tr><tr><td>未予約者の移動達成率</td><td>${am.walkin*20}%（${am.walkin}/5人）</td><td>${bm.walkin*20}%（${bm.walkin}/5人）</td></tr><tr><td>総走行距離</td><td>${Number(am.distance).toFixed(1)} km</td><td>${Number(bm.distance).toFixed(1)} km</td></tr>${S.nodes.map(n=>`<tr><td>${esc(n.name)} 発の未予約・未達人数</td><td>${am.unmet[n.name]??am.unmet[n.id]??0}人</td><td>${bm.unmet[n.name]??bm.unmet[n.id]??0}人</td></tr>`).join('')}</tbody></table><p class="note">B−A：未予約の到着 ${bm.walkin-am.walkin>=0?'+':''}${bm.walkin-am.walkin}人 / 走行距離 ${(bm.distance-am.distance).toFixed(1)} km。現在の地図は比較実行前の状態を保持しています。未達人数には終了時点の乗車中・待機中・未発生を含みます。</p>`;c.scrollIntoView({behavior:'smooth',block:'start'})};
+$('reserveOrigin').innerHTML=S.nodes.map(n=>`<option value="${n.id}">${esc(n.name)}</option>`).join('');
+$('reserveDestination').innerHTML=$('reserveOrigin').innerHTML;
+$('reserveOrigin').value='park';$('reserveDestination').value='hospital';
+$('demoSetup').onclick=()=>{mode='B';$('seed').value=42;reset();seek(40);$('reserveOrigin').value='park';$('reserveDestination').value='hospital';$('reservationNotice').textContent='9:40にセットしました。色付き破線を見てから「この移動を予約」を押すと、変更前の予定を灰色で残して比較できます。';};
+function parsePickupTime(value){const match=/^(\d{2}):(\d{2})$/.exec(value);return match?Number(match[1])*60+Number(match[2])-540:NaN;}
+$('reserveTime').addEventListener('input',()=>{pickupTimeEdited=true;});
+$('reservationForm').onsubmit=e=>{
+e.preventDefault();stop();const previous=timeline.preview();
+const result=timeline.reserve({origin:$('reserveOrigin').value,destination:$('reserveDestination').value,readyAt:parsePickupTime($('reserveTime').value),deadline:180});
+state=timeline.state;if(result.ok){beforePlan=previous;bookingId=result.id;}
+$('reservationNotice').textContent=result.message+(result.ok?'。灰色が予約前、色付き破線が予約後の予定です。再生して迎えを確認してください。':'');render();
+};
+$('timeSlider').addEventListener('input',e=>seek(e.target.value));
+reset();window.demo={get state(){return state},advance,seek,reset};
+</script></body></html>
